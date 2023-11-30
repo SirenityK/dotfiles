@@ -18,5 +18,3 @@ wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20R
 cp -r $BASEDIR/. ~
 
 cat strings.txt | tee ~/.zshrc
-
-exec zsh
