@@ -1,8 +1,5 @@
 BASEDIR=`dirname "$0"`
 
-# Copy all repo files to home directory, subfolders are copied recursively
-cp -r $BASEDIR/. ~
-
 sudo pacman -S lsd bat zsh zsh-completions neovim thefuck kitty wget tmux --noconfirm
 
 bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)"
@@ -16,6 +13,9 @@ rm -rf ~/miniconda3/miniconda.sh
 
 mkdir ~/.local/share/fonts
 wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -o '~/.local/share/fonts/MesloLGS NF Regular.ttf'
+
+# Copy all repo files to home directory, subfolders are copied recursively
+cp -r $BASEDIR/. ~
 
 cat strings.txt | tee ~/.zshrc
 
