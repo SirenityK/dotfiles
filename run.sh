@@ -17,4 +17,4 @@ wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20R
 # Copy all repo files to home directory, subfolders are copied recursively
 cp -r $BASEDIR/. ~
 
-cat strings.txt | tee ~/.zshrc
+cat strings.txt >> ~/.zshrc
