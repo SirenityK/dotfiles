@@ -12,7 +12,7 @@ bash -c "$(curl --fail --show-error --silent --location https://raw.githubuserco
 #~/miniconda3/bin/conda init zsh
 
 mkdir ~/.local/share/fonts
-wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -o '`echo $HOME`/.local/share/fonts/MesloLGS NF Regular.ttf'
+wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -o ~/.local/share/fonts/MesloLGS\ NF\ Regular.ttf
 
 # Copy all repo files to home directory, subfolders are copied recursively
 cp $BASEDIR/.p10k.zsh ~
