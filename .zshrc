@@ -9,6 +9,7 @@ alias cat=bat
 alias c=clear
 alias ls=lsd
 alias ..='cd ..'
+alias ip='ip --color=auto'
 export EDITOR=nvim
 # eval "$(ssh-agent -s | sed 's/^echo/# echo/')"; ssh-add ~/.ssh/github
 
