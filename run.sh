@@ -15,7 +15,7 @@ mkdir ~/.local/share/fonts
 wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -P ~/.local/share/fonts/
 
 # Copy all repo files to home directory, subfolders are copied recursively
-cp $BASEDIR/.p10k.zsh ~
+cp $BASEDIR/p10k/.p10k_desktop.zsh ~/.p10k.zsh
 cp $BASEDIR/.xprofile ~
 cp -r $BASEDIR/.config ~
 
