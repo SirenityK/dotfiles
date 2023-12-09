@@ -11,9 +11,11 @@ alias ls=lsd
 alias ..='cd ..'
 alias ip='ip --color=auto'
 export EDITOR=nvim
-HISTFILE=~/.zsh_history
+HISTFILE=~/.histfile
 HISTSIZE=10000
 SAVEHIST=10000
+autoload -Uz compinit
+compinit
 # eval "$(ssh-agent -s | sed 's/^echo/# echo/')"; ssh-add ~/.ssh/github
 
 # source ~/venv/bin/activate  # commented out by conda initialize
