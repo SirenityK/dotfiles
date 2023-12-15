@@ -2,7 +2,7 @@ BASEDIR=`dirname "$0"`
 
 # install python environment?
 read -p 'Install python virtual environment? [y/n]: ' install_python
-if [ $python == 'y' ]; then
+if [ '$python' == 'y' ]; then
     python=python3
     venv=virtualenv
 fi
@@ -23,6 +23,7 @@ elif [ -f '/etc/arch-release' ]; then
     sudo pacman -Sv lsd bat zsh zsh-completions neovim thefuck kitty wget tmux $python --noconfirm
     mkdir ~/.local/share/fonts
     wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -P ~/.local/share/fonts/
+fi
 
 if [ ! $TERMUX ]; then
     cp $BASEDIR/.xprofile ~
@@ -47,5 +48,4 @@ if [ $pip ]; then
     source ~/.venv/bin/activate
     pip install yt-dlp
     # room for more
-    
 fi
