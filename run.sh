@@ -42,9 +42,6 @@ if [ ! $TERMUX ]; then
 else
     chsh -s zsh
     exec zsh
-    p10k configure <<!
-    y
-    q
 fi
 
 # zinit
