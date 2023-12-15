@@ -42,7 +42,7 @@ cat $BASEDIR/.zshrc >> ~/.zshrc
 
 if [ -n $install_python ]; then
     python3 -m pip install -U pip wheel setuptools virtualenv
-    virtualenv .venv
+    virtualenv ~/.venv
     echo 'source ~/.venv/bin/activate' >> .zshrc
     
     read -p 'Install life-elemental python packages? [textToConfirm]: ' pip
