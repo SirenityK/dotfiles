@@ -38,6 +38,13 @@ fi
 if [ ! $TERMUX ]; then
     cp $BASEDIR/.xprofile ~
     cp -r $BASEDIR/.config ~
+    chsh -s `command -v zsh`
+else
+    chsh -s zsh
+    exec zsh
+    p10k configure <<!
+    y
+    q
 fi
 
 # zinit
@@ -58,4 +65,11 @@ if [ -n $install_python ]; then
         pip install yt-dlp
         # room for more
     fi
+fi
+
+if [ -n $TERMUX ]; then
+    chsh -s zsh
+
+else
+    chsh -s 
 fi
