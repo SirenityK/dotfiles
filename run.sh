@@ -41,7 +41,6 @@ if [ ! $TERMUX ]; then
     chsh -s `command -v zsh`
 else
     chsh -s zsh
-    exec zsh
 fi
 
 # zinit
@@ -64,9 +63,4 @@ if [ -n $install_python ]; then
     fi
 fi
 
-if [ -n $TERMUX ]; then
-    chsh -s zsh
-
-else
-    chsh -s 
-fi
+exit
