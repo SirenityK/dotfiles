@@ -1,6 +1,5 @@
 #!/usr/bin/zsh
 
-exec tmux
 vim /etc/pacman.conf
 # delete full disk first
 umount -R /mnt
