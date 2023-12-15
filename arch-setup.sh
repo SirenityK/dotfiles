@@ -1,5 +1,6 @@
 #!/usr/bin/zsh
 
+tmux
 vim /etc/pacman.conf
 # delete full disk first
 wipefs -a /dev/sda
