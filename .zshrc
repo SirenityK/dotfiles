@@ -8,24 +8,23 @@ fi
 alias cat=bat
 alias c=clear
 alias ls=lsd
-alias ..='cd ..'
 alias ip='ip --color=auto'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
 export EDITOR=nvim
+
 HISTFILE=~/.histfile
 HISTSIZE=10000
 SAVEHIST=10000
+
 autoload -Uz compinit
 compinit
 # eval "$(ssh-agent -s | sed 's/^echo/# echo/')"; ssh-add ~/.ssh/github
-
-# source ~/venv/bin/activate  # commented out by conda initialize
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 if [ -x "$(command -v tmux)" ] && [ -n "${DISPLAY}" ] && [ -z "${TMUX}" ]; then
 	exec tmux new-session -A -s ${USER} >/dev/null 2>&1
- 	# exec tmux new-session
 fi
-
-eval $(thefuck --alias)
