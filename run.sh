@@ -45,6 +45,7 @@ fi
 
 read -p 'Install life-elemental python packages?' pip
 if [ $pip ]; then
+    source ~/.venv/bin/activate
     pip install yt-dlp
     # room for more
     
