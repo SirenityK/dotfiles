@@ -2,7 +2,7 @@ BASEDIR=`dirname "$0"`
 
 # install python environment?
 read -p 'Install python virtual environment? [y/n]: ' install_python
-if [ $python = 'y' ]; then
+if [ $python == 'y' ]; then
     python=python3
     venv=virtualenv
 fi
@@ -16,7 +16,6 @@ if [ -d '/data/data/com.termux' ]; then
 # detect if debian
 elif [ -f '/etc/debian_version' ]; then
     sudo apt install lsd bat zsh zsh-completions neovim thefuck kitty wget tmux $python -y
-fi
 
 # detect if arch
 elif [ -f '/etc/arch-release' ]; then
