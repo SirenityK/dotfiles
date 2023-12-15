@@ -11,17 +11,17 @@ fi
 if [ -d '/data/data/com.termux' ]; then
     TERMUX=true
     echo 'Termux detected'
-    pkg install lsd bat zsh zsh-completions neovim wget tmux $python $venv -y
+    pkg install lsd bat zsh zsh-completions neovim wget tmux $python -y
 
 # detect if debian
 elif [ -f '/etc/debian_version' ]; then
-    sudo apt install lsd bat zsh zsh-completions neovim thefuck kitty wget tmux $python $venv -y
+    sudo apt install lsd bat zsh zsh-completions neovim thefuck kitty wget tmux $python -y
 fi
 
 # detect if arch
 elif [ -f '/etc/arch-release' ]; then
     echo 'Arch detected'
-    sudo pacman -Sv lsd bat zsh zsh-completions neovim thefuck kitty wget tmux $python $venv --noconfirm
+    sudo pacman -Sv lsd bat zsh zsh-completions neovim thefuck kitty wget tmux $python --noconfirm
     mkdir ~/.local/share/fonts
     wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -P ~/.local/share/fonts/
 
@@ -38,6 +38,7 @@ cat $BASEDIR/extensions.txt >> ~/.zshrc
 cat $BASEDIR/.zshrc >> ~/.zshrc
 
 if [ $install_python ]; then
+    python3 -m pip install -U pip wheel setuptools virtualenv
     virtualenv .venv
     echo 'source ~/.venv/bin/activate' >> .zshrc
 fi
