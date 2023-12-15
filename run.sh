@@ -2,25 +2,25 @@ BASEDIR=`dirname "$0"`
 
 # install python environment?
 read -p 'Install python virtual environment? [y/n]: ' install_python
-if [ '$python' == 'y' ]; then
-    python=python3
-    venv=virtualenv
+if [ '$install_python' == 'y' ]; then
+    venv=python-virtualenv
+    dvenv=python3-virtualenv
 fi
 
 # detect if termux
 if [ -d '/data/data/com.termux' ]; then
     TERMUX=true
     echo 'Termux detected'
-    pkg install lsd bat zsh zsh-completions neovim wget tmux $python -y
+    pkg install lsd bat zsh zsh-completions neovim wget tmux $dvenv -y
 
 # detect if debian
 elif [ -f '/etc/debian_version' ]; then
-    sudo apt install lsd bat zsh zsh-completions neovim thefuck kitty wget tmux $python -y
+    sudo apt install lsd bat zsh zsh-completions neovim thefuck kitty wget tmux $dvenv -y
 
 # detect if arch
 elif [ -f '/etc/arch-release' ]; then
     echo 'Arch detected'
-    sudo pacman -Sv lsd bat zsh zsh-completions neovim thefuck kitty wget tmux $python --noconfirm
+    sudo pacman -Sv lsd bat zsh zsh-completions neovim thefuck kitty wget tmux $venv --noconfirm
     mkdir ~/.local/share/fonts
     wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -P ~/.local/share/fonts/
 fi
