@@ -76,8 +76,6 @@ HISTFILE=~/.histfile
 HISTSIZE=10000
 SAVEHIST=10000
 
-autoload -Uz compinit
-compinit
 # eval "$(ssh-agent -s | sed 's/^echo/# echo/')"; ssh-add ~/.ssh/github
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
