@@ -46,7 +46,6 @@ fi
 # zinit
 bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)"
 
-<<<<<<< HEAD
 #mkdir -p ~/miniconda3
 #wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
 #bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
@@ -62,10 +61,8 @@ cp $BASEDIR/p10k/.p10k_desktop.zsh ~/.p10k.zsh
 cp $BASEDIR/.xprofile ~
 cp -r $BASEDIR/.config ~
 
-=======
 cp $BASEDIR/p10k/.p10k.zsh ~/.p10k.zsh
 cat $BASEDIR/extensions.txt >> ~/.zshrc
->>>>>>> development
 cat $BASEDIR/.zshrc >> ~/.zshrc
 
 if [ -n $install_python ]; then

@@ -1,3 +1,6 @@
+autoload -Uz compinit
+compinit
+
 # create a zkbd compatible hash;
 # to add other keys to this hash, see: man 5 terminfo
 typeset -g -A key
@@ -53,6 +56,7 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion::complete:*' gain-privileges 1
 
 alias cat=bat
@@ -63,19 +67,14 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 export EDITOR=nvim
-<<<<<<< HEAD
 HISTFILE=~/.histfile
 HISTSIZE=10000
 SAVEHIST=10000
-autoload -Uz compinit
-compinit
 # eval "$(ssh-agent -s | sed 's/^echo/# echo/')"; ssh-add ~/.ssh/github
-=======
 
 HISTFILE=~/.histfile
 HISTSIZE=10000
 SAVEHIST=10000
->>>>>>> development
 
 autoload -Uz compinit
 compinit
