@@ -63,6 +63,7 @@ alias cat=bat
 alias c=clear
 alias ls=lsd
 alias ip='ip --color=auto'
+alias grep='grep --color=auto'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
