@@ -62,11 +62,14 @@ zstyle ':completion::complete:*' gain-privileges 1
 alias cat=bat
 alias c=clear
 alias ls=lsd
+alias find=fd
 alias ip='ip --color=auto'
-alias grep='grep --color=auto'
+alias grep='ug'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
+alias .....='cd ../../../..'
+command -v dua >/dev/null && alias du='dua'
 export EDITOR=nvim
 HISTFILE=~/.histfile
 HISTSIZE=10000
