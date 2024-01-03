@@ -16,7 +16,7 @@ if [ -d '/data/data/com.termux' ]; then
     echo 'Termux detected'
     pkg update -y
     pkg upgrade -y
-    pkg install lsd bat zsh zsh-completions neovim wget tmux fd-find ugrep $tvenv -y
+    pkg install lsd bat zsh zsh-completions neovim wget tmux fd ugrep dua $tvenv -y
 
 # detect if debian
 elif [ -f '/etc/debian_version' ]; then
