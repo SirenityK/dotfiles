@@ -16,7 +16,7 @@ elif [ -f '/etc/debian_version' ]; then
     sudo apt update -y
     sudo apt upgrade -y
     sudo apt install aptitude -y
-    sudo aptitude install lsd bat zsh zsh-completions neovim thefuck kitty wget tmux fd-find ugrep curl wget -y
+    sudo aptitude install lsd bat zsh neovim thefuck kitty wget tmux fd-find ugrep curl wget -y
     mkdir ~/.local/share/fonts
     wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -P ~/.local/share/fonts/
 
