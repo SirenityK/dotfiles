@@ -2,7 +2,6 @@
 
 BASEDIR=`dirname "$0"`
 
-sudo true
 # detect if termux
 if [ -d '/data/data/com.termux' ]; then
     TERMUX=true
