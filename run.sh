@@ -17,15 +17,11 @@ elif [ -f '/etc/debian_version' ]; then
     sudo apt upgrade -y
     sudo apt install aptitude -y
     sudo aptitude install lsd bat zsh neovim thefuck kitty wget tmux fd-find ugrep curl wget -y
-    mkdir ~/.local/share/fonts
-    wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -P ~/.local/share/fonts/
 
 # detect if arch
 elif [ -f '/etc/arch-release' ]; then
     echo 'Arch detected'
     sudo pacman -Syuv --noconfirm lsd bat zsh zsh-completions neovim thefuck kitty wget tmux dua-cli fd ugrep curl wget
-    mkdir ~/.local/share/fonts
-    wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -P ~/.local/share/fonts/
 fi
 
 if [ ! $TERMUX ]; then
