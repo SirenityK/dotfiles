@@ -8,7 +8,7 @@ if [ -d '/data/data/com.termux' ]; then
     echo 'Termux detected'
     pkg update -y
     pkg upgrade -y
-    pkg install lsd bat zsh zsh-completions neovim wget tmux fd-find ugrep dua curl wget -y
+    pkg install lsd bat zsh zsh-completions neovim wget tmux fd-find ripgrep dua curl wget -y
 
 # detect if debian
 elif [ -f '/etc/debian_version' ]; then
@@ -16,12 +16,12 @@ elif [ -f '/etc/debian_version' ]; then
     sudo apt update -y
     sudo apt upgrade -y
     sudo apt install aptitude -y
-    sudo aptitude install lsd bat zsh neovim thefuck kitty wget tmux fd-find ugrep curl wget -y
+    sudo aptitude install lsd bat zsh neovim thefuck kitty wget tmux fd-find ripgrep curl wget -y
 
 # detect if arch
 elif [ -f '/etc/arch-release' ]; then
     echo 'Arch detected'
-    sudo pacman -Syuv --noconfirm lsd bat zsh zsh-completions neovim thefuck kitty wget tmux dua-cli fd ugrep curl wget
+    sudo pacman -Syuv --noconfirm lsd bat zsh zsh-completions neovim thefuck kitty wget tmux dua-cli fd ripgrep curl wget
 fi
 
 if [ ! $TERMUX ]; then
