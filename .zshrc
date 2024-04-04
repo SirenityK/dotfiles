@@ -59,28 +59,37 @@ zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion::complete:*' gain-privileges 1
 
+eval "$(zoxide init zsh)"
 alias cat=bat
 alias c=clear
 alias ls=lsd
 alias find=fd
 alias ip='ip --color=auto'
-alias grep='ug'
+alias grep='rg'
+alias pull='git pull'
+alias push='git push'
+alias commit='git commit'
+alias start='xdg-open'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
+alias ua-drop-caches='sudo paccache -rk3; yay -Sc --aur --noconfirm'
+alias ua-update-all='export TMPFILE="$(mktemp)"; \
+    sudo true; \
+    rate-mirrors --save=$TMPFILE arch --max-delay=21600 \
+      && sudo mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-backup \
+      && sudo mv $TMPFILE /etc/pacman.d/mirrorlist \
+      && ua-drop-caches \
+      && yay -Syyu --noconfirm'
+
 command -v dua >/dev/null && alias du='dua'
 export EDITOR=nvim
-HISTFILE=~/.histfile
-HISTSIZE=10000
-SAVEHIST=10000
 # eval "$(ssh-agent -s | sed 's/^echo/# echo/')"; ssh-add ~/.ssh/github
 
 HISTFILE=~/.histfile
 HISTSIZE=10000
 SAVEHIST=10000
-
-# eval "$(ssh-agent -s | sed 's/^echo/# echo/')"; ssh-add ~/.ssh/github
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
