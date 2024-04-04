@@ -60,6 +60,7 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion::complete:*' gain-privileges 1
 
 eval "$(zoxide init zsh)"
+alias cd=z
 alias cat=bat
 alias c=clear
 alias ls=lsd
