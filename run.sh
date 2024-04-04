@@ -28,19 +28,14 @@ if [ ! $TERMUX ]; then
     cp $BASEDIR/.xprofile ~
     cp -r $BASEDIR/.config ~
     chsh -s `command -v zsh`
+    mkdir ~/.local/share/fonts
+    wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -P ~/.local/share/fonts/
 else
     chsh -s zsh
 fi
 
 # zinit
 bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)"
-
-mkdir ~/.local/share/fonts
-wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -P ~/.local/share/fonts/
-
-# Copy all repo files to home directory, subfolders are copied recursively
-cp $BASEDIR/.xprofile ~
-cp -r $BASEDIR/.config ~
 
 cp $BASEDIR/p10k/.p10k.zsh ~/.p10k.zsh
 cat $BASEDIR/extensions.txt >> ~/.zshrc
