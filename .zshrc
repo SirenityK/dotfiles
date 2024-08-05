@@ -59,12 +59,35 @@ zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion::complete:*' gain-privileges 1
 
+autoload -U select-word-style
+select-word-style bash
+
+find_distribution() {
+    if [ -f '/etc/debian_version' ]; then
+        echo 'Debian'
+    elif [ -f '/etc/arch-release' ]; then
+        echo 'Arch'
+    elif [ -d '/data/data/com.termux' ]; then
+        echo 'Termux'
+    else
+        echo 'Unknown'
+    fi
+}
+
+DIST=$(find_distribution)
+
+if [ "$DIST" = 'Debian' ]; then
+    alias cat=batcat
+    alias find=fdfind
+    export PATH=$PATH:~/.local/bin:~/.cargo/bin
+else
+    alias cat=bat
+    alias find=fd
+fi
 eval "$(zoxide init zsh)"
 alias cd=z
-alias cat=bat
 alias c=clear
 alias ls=lsd
-alias find=fd
 alias ip='ip --color=auto'
 alias grep='rg'
 alias pull='git pull'
@@ -75,14 +98,16 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
-alias ua-drop-caches='sudo paccache -rk3; yay -Sc --aur --noconfirm'
-alias ua-update-all='export TMPFILE="$(mktemp)"; \
-    sudo true; \
-    rate-mirrors --save=$TMPFILE arch --max-delay=21600 \
-      && sudo mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-backup \
-      && sudo mv $TMPFILE /etc/pacman.d/mirrorlist \
-      && ua-drop-caches \
-      && yay -Syyu --noconfirm'
+if [ "$DIST" = 'Arch' ]; then
+    alias ua-drop-caches='sudo paccache -rk3; yay -Sc --aur --noconfirm'
+    alias ua-update-all='export TMPFILE="$(mktemp)"; \
+        sudo true; \
+        rate-mirrors --save=$TMPFILE arch --max-delay=21600 \
+        && sudo mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-backup \
+        && sudo mv $TMPFILE /etc/pacman.d/mirrorlist \
+        && ua-drop-caches \
+        && yay -Syyu --noconfirm'
+fi
 
 command -v dua >/dev/null && alias du='dua'
 export EDITOR=nvim
