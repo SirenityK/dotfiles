@@ -1,0 +1,21 @@
+FROM ubuntu
+
+RUN apt update && apt upgrade -y
+RUN apt install -y git sudo zsh less
+RUN echo "%wheel ALL=(ALL:ALL) NOPASSWD: ALL" >>/etc/sudoers
+RUN useradd -m sirenityk
+RUN groupadd wheel
+RUN usermod -aG wheel sirenityk
+
+USER sirenityk
+WORKDIR /home/sirenityk
+COPY . dotfiles
+RUN bash dotfiles/run.sh
+RUN zsh -ic 'source .local/share/zinit/plugins/romkatv---powerlevel10k/gitstatus/install'
+RUN sudo rm -fr dotfiles
+RUN sudo apt autopurge -y
+RUN sudo apt clean -y
+
+EXPOSE 5901 8080 5173 4173 8000
+
+CMD ["/usr/bin/zsh"]
