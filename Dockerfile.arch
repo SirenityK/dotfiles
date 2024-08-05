@@ -1,6 +1,6 @@
 FROM archlinux:base-devel
 
-RUN pacman -Syu --noconfirm git less
+RUN pacman -Syu --noconfirm --needed git less
 RUN echo "%wheel ALL=(ALL:ALL) NOPASSWD: ALL" >>/etc/sudoers
 RUN useradd -m sirenityk
 RUN usermod -aG wheel sirenityk
@@ -8,12 +8,12 @@ RUN usermod -aG wheel sirenityk
 USER sirenityk
 WORKDIR /home/sirenityk
 COPY . dotfiles
-RUN git clone https://aur.archlinux.org/yay-bin yay
-RUN cd yay && makepkg -si --noconfirm
 RUN bash dotfiles/run.sh
+RUN git clone https://aur.archlinux.org/yay-bin yay --depth 1
+RUN cd yay && makepkg -si --noconfirm
 RUN zsh -ic 'source .local/share/zinit/plugins/romkatv---powerlevel10k/gitstatus/install'
-RUN rm -fr dotfiles yay
-RUN yay -Rscnu --noconfirm $(yay -Qdtq)
+RUN sudo rm -fr dotfiles yay
+RUN yay -Rscnu --noconfirm $(yay -Qdtq); exit 0
 RUN yes | yay -Scc
 
 CMD ["/usr/sbin/zsh"]

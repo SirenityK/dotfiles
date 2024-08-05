@@ -1,1 +1,0 @@
-docker run -it -e TERM -e COLORTERM -e LC_ALL=C.UTF-8 --name arch arch

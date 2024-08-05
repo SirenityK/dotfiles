@@ -37,10 +37,8 @@ elif [ -f '/etc/gentoo-release' ]; then
 fi
 
 if [ ! $TERMUX ]; then
-    cp $BASEDIR/.xprofile ~
     cp -r $BASEDIR/.config ~
-    chsh -s /bin/zsh
-    mkdir ~/.local/share/fonts
+    sudo chsh sirenityk -s `cat /etc/shells | grep zsh | tail -1`
     wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -P ~/.local/share/fonts/
 else
     chsh -s zsh
