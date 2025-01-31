@@ -14,6 +14,5 @@ RUN bash dotfiles/run.sh
 RUN sudo rm -fr dotfiles
 RUN sudo apt autopurge -y
 RUN sudo apt clean -y
-RUN zsh -ic 'source .local/share/zinit/plugins/romkatv---powerlevel10k/gitstatus/install'
 
 CMD ["/usr/bin/zsh"]
