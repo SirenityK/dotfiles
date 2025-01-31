@@ -76,7 +76,7 @@ else
 fi
 
 # zinit
-bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)"
+yes | bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)"
 
 cp $BASEDIR/p10k/.p10k.zsh ~/.p10k.zsh
 append .extensions.sh
