@@ -22,7 +22,7 @@ elif [ -f '/etc/debian_version' ]; then
     curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
     # dua
     curl -LSfs https://raw.githubusercontent.com/Byron/dua-cli/master/ci/install.sh |
-        sh -s -- --git Byron/dua-cli --target x86_64-unknown-linux-musl --crate dua --tag v2.17.4
+        sh -s -- --git Byron/dua-cli --target x86_64-unknown-linux-musl --crate dua --tag v2.29.0
 
 # detect if arch
 elif [ -f '/etc/arch-release' ]; then
