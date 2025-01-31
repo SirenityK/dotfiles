@@ -27,7 +27,7 @@ append() {
 }
 
 GENERAL_PACKAGES="zsh curl lsd ripgrep bat wget tmux vim"
-TERMUX_PACKAGES=$GENERAL_PACKAGES" zoxide fd-find zsh-completions dua"
+TERMUX_PACKAGES=$GENERAL_PACKAGES" zoxide fd zsh-completions dua"
 DEBIAN_PACKAGES=$GENERAL_PACKAGES" fd-find kitty thefuck"
 ARCH_PACKAGES=$GENERAL_PACKAGES" zoxide dua-cli zsh-completions kitty thefuck fd"
 DISTRO=$(find_distribution)
@@ -38,7 +38,7 @@ if [ "$DISTRO" = 'termux' ]; then
     echo 'Termux detected'
     pkg update -y
     pkg upgrade -y
-    pkg install -y $TERMUX_PACKAGES
+    yes | pkg install -y $TERMUX_PACKAGES
 
 # detect if debian
 elif [ "$DISTRO" = 'debian' ]; then
