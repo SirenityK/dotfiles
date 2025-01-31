@@ -11,11 +11,9 @@ USER sirenityk
 WORKDIR /home/sirenityk
 COPY . dotfiles
 RUN bash dotfiles/run.sh
-RUN zsh -ic 'source .local/share/zinit/plugins/romkatv---powerlevel10k/gitstatus/install'
 RUN sudo rm -fr dotfiles
 RUN sudo apt autopurge -y
 RUN sudo apt clean -y
-
-EXPOSE 5901 8080 5173 4173 8000
+RUN zsh -ic 'source .local/share/zinit/plugins/romkatv---powerlevel10k/gitstatus/install'
 
 CMD ["/usr/bin/zsh"]
