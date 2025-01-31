@@ -64,16 +64,19 @@ elif [ "$DISTRO" = 'gentoo' ]; then
     cargo install lsd bat fd-find dua-cli zoxide ripgrep17
 fi
 
+LINK=https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf
 if [ ! $TERMUX ]; then
     cp -r $BASEDIR/.config ~
     sudo chsh sirenityk -s $(cat /etc/shells | grep zsh | tail -1)
-    wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf -P ~/.local/share/fonts/
+    wget $LINK -P ~/.local/share/fonts/
 else
+    wget $LINK -O ~/.termux/font.ttf
+    termux-reload-settings
     chsh -s zsh
 fi
 
 # zinit
-yes | bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)"
+bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)"
 
 cp $BASEDIR/p10k/.p10k.zsh ~/.p10k.zsh
 append .extensions.sh
