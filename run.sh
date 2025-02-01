@@ -90,7 +90,7 @@ fi
 append aliases.sh
 append .zshrc-end.sh
 
-source ~/.local/share/zinit/plugins/romkatv---powerlevel10k/gitstatus/install
+zsh -ic 'source ~/.local/share/zinit/plugins/romkatv---powerlevel10k/gitstatus/install'
 
 source $BASEDIR/tools/prompt.sh
 
