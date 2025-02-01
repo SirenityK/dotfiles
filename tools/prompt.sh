@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/env bash
 
 set -e
 
@@ -18,6 +18,9 @@ append_endline() {
 }
 
 yn() {
+    if [ -f /.dockerenv ]; then
+        return false
+    fi
     local prompt="$1"
     local default="${2:-n}"
     local response
@@ -57,18 +60,23 @@ elif [ -f '/etc/gentoo-release' ]; then
     GENTOO=true
 fi
 
-yn "Install pyenv?" && {
+(yn "Install pyenv?" || [ $PYENV ]) && {
+    append_endline
+    append '# pyenv'
     append 'export PYENV_ROOT="$HOME/.pyenv"'
     append '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"'
-    append 'eval "$(pyenv init - bash)"'
+    append 'eval "$(pyenv init - zsh)"'
     append 'eval "$(pyenv virtualenv-init -)"'
+    append '# end pyenv'
     append_endline
     curl https://pyenv.run | bash
 }
 
-yn "Install uv?" && {
-    if [ $TERMUX ] || [ $DEBIAN ]; then
+(yn "Install uv?" || [ $UV ]) && {
+    if [ $TERMUX ]; then
         apt install uv
+    elif [ $DEBIAN ]; then
+        sudo apt install uv
     elif [ $ARCH ]; then
         sudo pacman -S --needed --noconfirm uv
     elif [ $GENTOO ]; then
@@ -78,12 +86,12 @@ yn "Install uv?" && {
     append '# uv'
     append 'eval "$(uv generate-shell-completion zsh)"'
     append 'eval "$(uvx --generate-shell-completion zsh)"'
-    append "alias uvp='uv pip --system'"
+    append "alias uvp='uv pip'"
     append '# end uv'
     append_endline
 }
 
-yn "Install nvm?" && {
+(yn "Install nvm?" || [ $NVM ]) && {
     append '# start nvm'
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
     append '# end nvm'
@@ -96,9 +104,6 @@ if [ $TERMUX ]; then
         touch $FLAG_FILE
         pkg install -y termux-services openssh
         mkdir -p ~/.termux/boot
-        yn "To continue, you need to restart termux. Continue?" && {
-            am startservice -a com.termux.service_stop com.termux/.app.TermuxService
-        }
         append "sv-enable sshd" ~/.termux-setup-continue.sh
         append 'echo "Setup complete!"' ~/.termux-setup-continue.sh
         append '# services'
@@ -108,5 +113,8 @@ if [ $TERMUX ]; then
         append 'termux-wake-lock' ~/.termux/boot/start-services
         append '. $PREFIX/etc/profile' ~/.termux/boot/start-services
         append_endline ~/.termux/boot/start-services
+        yn "To continue, you need to restart termux. Continue?" && {
+            am startservice -a com.termux.service_stop com.termux/.app.TermuxService
+        }
     }
 fi

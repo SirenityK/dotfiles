@@ -7,11 +7,14 @@ RUN usermod -aG wheel sirenityk
 
 USER sirenityk
 WORKDIR /home/sirenityk
-COPY . dotfiles
-RUN bash dotfiles/run.sh
 RUN git clone https://aur.archlinux.org/yay-bin yay --depth 1
 RUN cd yay && makepkg -si --noconfirm
-RUN sudo rm -fr dotfiles yay
+COPY . dotfiles
+ARG PYENV=false
+ARG UV=false
+ARG NVM=false
+RUN bash dotfiles/run.sh
+RUN sudo rm -fr dotfiles yay .bash*
 RUN yay -Rscnu --noconfirm $(yay -Qdtq); exit 0
 RUN yes | yay -Scc
 

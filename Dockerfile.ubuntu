@@ -9,9 +9,12 @@ RUN usermod -aG wheel sirenityk
 
 USER sirenityk
 WORKDIR /home/sirenityk
+ARG PYENV=false
+ARG UV=false
+ARG NVM=false
 COPY . dotfiles
 RUN bash dotfiles/run.sh
-RUN sudo rm -fr dotfiles
+RUN sudo rm -fr dotfiles .bash*
 RUN sudo apt autopurge -y
 RUN sudo apt clean -y
 

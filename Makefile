@@ -3,7 +3,18 @@ DISTROS := arch ubuntu
 export USERNAME := $(shell whoami)
 
 define build_image
-	docker build -t $(USERNAME)/$(1) -f Dockerfile.$(1) . && \
+	set_env_var() { \
+		read -p "Install $$1 in $(1)? (y/n) " yn; \
+		if [ "$$yn" = "y" ]; then \
+			echo "true"; \
+		else \
+			echo "false"; \
+		fi; \
+	}; \
+	PYENV=$$(set_env_var pyenv); \
+	UV=$$(set_env_var uv); \
+	NVM=$$(set_env_var nvm); \
+	docker build --build-arg PYENV=$$PYENV --build-arg UV=$$UV --build-arg NVM=$$NVM -t $(USERNAME)/$(1) -f Dockerfile.$(1) . && \
 	docker run -d -e TERM -e COLORTERM -e LC_ALL=C.UTF-8 -it --name $(1) $(USERNAME)/$(1) && \
 	docker kill $(1)
 endef
