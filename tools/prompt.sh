@@ -58,15 +58,15 @@ elif [ -f '/etc/gentoo-release' ]; then
 fi
 
 yn "Install pyenv?" && {
-    curl https://pyenv.run | bash
     append 'export PYENV_ROOT="$HOME/.pyenv"'
     append '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"'
     append 'eval "$(pyenv init - bash)"'
     append 'eval "$(pyenv virtualenv-init -)"'
+    curl https://pyenv.run | bash
 }
 
 yn "Install uv?" && {
-    if [ $TERMUX || $DEBIAN ]; then
+    if [ $TERMUX ] || [ $DEBIAN ]; then
         apt install uv
     elif [ $ARCH ]; then
         sudo pacman -S --needed --noconfirm uv
