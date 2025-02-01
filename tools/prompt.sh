@@ -2,18 +2,6 @@
 
 set -e
 
-find_distribution() {
-    if [ -f '/etc/debian_version' ]; then
-        DEBIAN=true
-    elif [ -f '/etc/arch-release' ]; then
-        ARCH=true
-    elif [ -d '/data/data/com.termux' ]; then
-        TERMUX=true
-    elif [ -f '/etc/gentoo-release' ]; then
-        GENTOO=true
-    fi
-}
-
 append() {
     if [ $2 ]; then
         if ! [ -f $2 ]; then
@@ -59,6 +47,16 @@ yn() {
     done
 }
 
+if [ -f '/etc/debian_version' ]; then
+    DEBIAN=true
+elif [ -f '/etc/arch-release' ]; then
+    ARCH=true
+elif [ -d '/data/data/com.termux' ]; then
+    TERMUX=true
+elif [ -f '/etc/gentoo-release' ]; then
+    GENTOO=true
+fi
+
 yn "Install pyenv?" && {
     curl https://pyenv.run | bash
     append 'export PYENV_ROOT="$HOME/.pyenv"'
@@ -70,7 +68,7 @@ yn "Install pyenv?" && {
 yn "Install uv?" && {
     if [ $TERMUX || $DEBIAN ]; then
         apt install uv
-    elif [ $ARCH]; then
+    elif [ $ARCH ]; then
         sudo pacman -S --needed --noconfirm uv
     elif [ $GENTOO ]; then
         cargo install --git https://github.com/astral-sh/uv uv

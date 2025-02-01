@@ -4,18 +4,6 @@ set -e
 
 BASEDIR=$(dirname "$0")
 
-find_distribution() {
-    if [ -f '/etc/debian_version' ]; then
-        DEBIAN=true
-    elif [ -f '/etc/arch-release' ]; then
-        ARCH=true
-    elif [ -d '/data/data/com.termux' ]; then
-        TERMUX=true
-    elif [ -f '/etc/gentoo-release' ]; then
-        GENTOO=true
-    fi
-}
-
 append() {
     if [ -f "$BASEDIR/$1" ]; then
         cat $BASEDIR/$1 >>~/.zshrc
@@ -28,11 +16,18 @@ GENERAL_PACKAGES="zsh curl lsd ripgrep bat wget tmux vim"
 TERMUX_PACKAGES=$GENERAL_PACKAGES" zoxide fd zsh-completions dua"
 DEBIAN_PACKAGES=$GENERAL_PACKAGES" fd-find kitty thefuck"
 ARCH_PACKAGES=$GENERAL_PACKAGES" zoxide dua-cli zsh-completions kitty thefuck fd"
-DISTRO=$(find_distribution)
+if [ -f '/etc/debian_version' ]; then
+    DEBIAN=true
+elif [ -f '/etc/arch-release' ]; then
+    ARCH=true
+elif [ -d '/data/data/com.termux' ]; then
+    TERMUX=true
+elif [ -f '/etc/gentoo-release' ]; then
+    GENTOO=true
+fi
 
 # detect if termux
 if [ $TERMUX ]; then
-    TERMUX=true
     echo 'Termux detected'
     pkg update -y
     pkg upgrade -y
