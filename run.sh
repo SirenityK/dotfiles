@@ -77,7 +77,6 @@ append .zshrc
 
 # unique aliases
 [ $ARCH ] && append .zshrc-arch.sh
-[ $TERMUX ] && append .zshrc-termux.sh
 
 # special aliases due to debian's funky package names
 if [ $DEBIAN ]; then
