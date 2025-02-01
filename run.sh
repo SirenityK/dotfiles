@@ -13,7 +13,7 @@ append() {
 }
 
 GENERAL_PACKAGES="zsh curl lsd ripgrep bat wget tmux vim"
-TERMUX_PACKAGES=$GENERAL_PACKAGES" zoxide fd zsh-completions dua"
+TERMUX_PACKAGES=$GENERAL_PACKAGES" zoxide fd zsh-completions dua termux-api"
 DEBIAN_PACKAGES=$GENERAL_PACKAGES" fd-find kitty thefuck"
 ARCH_PACKAGES=$GENERAL_PACKAGES" zoxide dua-cli zsh-completions kitty thefuck fd"
 if [ -f '/etc/debian_version' ]; then

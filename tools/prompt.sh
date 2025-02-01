@@ -14,7 +14,7 @@ append() {
 }
 
 append_endline() {
-    echo >>~/.zshrc
+    append '' $1
 }
 
 yn() {
@@ -62,6 +62,7 @@ yn "Install pyenv?" && {
     append '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"'
     append 'eval "$(pyenv init - bash)"'
     append 'eval "$(pyenv virtualenv-init -)"'
+    append_endline
     curl https://pyenv.run | bash
 }
 
@@ -77,7 +78,7 @@ yn "Install uv?" && {
     append '# uv'
     append 'eval "$(uv generate-shell-completion zsh)"'
     append 'eval "$(uvx --generate-shell-completion zsh)"'
-    append 'alias uvp='uv pip --system''
+    append "alias uvp='uv pip --system'"
     append '# end uv'
     append_endline
 }
@@ -90,12 +91,22 @@ yn "Install nvm?" && {
 }
 
 if [ $TERMUX ]; then
-    yn "Install ssh-server?" && {
+    yn "Initialize ssh-server?" && {
+        FLAG_FILE=~/.termux-setup-continue.sh
+        touch $FLAG_FILE
         pkg install -y termux-services openssh
         mkdir -p ~/.termux/boot
-        sv-enable sshd
+        yn "To continue, you need to restart termux. Continue?" && {
+            am startservice -a com.termux.service_stop com.termux/.app.TermuxService
+        }
+        append "sv-enable sshd" ~/.termux-setup-continue.sh
+        append 'echo "Setup complete!"' ~/.termux-setup-continue.sh
+        append '# services'
+        append '[ -f ~/.termux-setup-continue.sh ] && source ~/.termux-setup-continue.sh && rm ~/.termux-setup-continue.sh'
+        append '# end services'
         append '#!/data/data/com.termux/files/usr/bin/sh' ~/.termux/boot/start-services
         append 'termux-wake-lock' ~/.termux/boot/start-services
         append '. $PREFIX/etc/profile' ~/.termux/boot/start-services
+        append_endline ~/.termux/boot/start-services
     }
 fi
