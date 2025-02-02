@@ -75,11 +75,9 @@ fi
 (yn "Install uv?" || [ $UV ]) && {
     if [ $TERMUX ]; then
         apt install uv
-    elif [ $DEBIAN ]; then
-        sudo apt install uv
     elif [ $ARCH ]; then
         sudo pacman -S --needed --noconfirm uv
-    elif [ $GENTOO ]; then
+    elif [ $GENTOO ] || [ $DEBIAN ]; then
         cargo install --git https://github.com/astral-sh/uv uv
     fi
 
