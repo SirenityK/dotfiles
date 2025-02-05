@@ -77,14 +77,19 @@ fi
         apt install uv
     elif [ $ARCH ]; then
         sudo pacman -S --needed --noconfirm uv
-    elif [ $GENTOO ] || [ $DEBIAN ]; then
+    elif [ $DEBIAN ]; then
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+    elif [ $GENTOO ]; then
         cargo install --git https://github.com/astral-sh/uv uv
     fi
 
     append '# uv'
-    append 'eval "$(uv generate-shell-completion zsh)"'
+    if ! [ $ARCH ]; then
+        append 'eval "$(uv generate-shell-completion zsh)"'
+    fi
     append 'eval "$(uvx --generate-shell-completion zsh)"'
     append "alias uvp='uv pip'"
+    append "export UV_SYSTEM_PYTHON=true"
     append '# end uv'
     append_endline
 }
