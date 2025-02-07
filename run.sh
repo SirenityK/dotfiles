@@ -53,7 +53,7 @@ elif [ $ARCH ]; then
 # detect if gentoo
 elif [ $GENTOO ]; then
     echo 'Gentoo detected'
-    sudo emerge -n zsh zsh-completions neovim kitty wget tmux
+    sudo emerge -n zsh zsh-completions vim kitty wget tmux
     cargo install lsd bat fd-find dua-cli zoxide ripgrep17
 fi
 
