@@ -2,7 +2,7 @@ When I started learning linux I spent a lot of time installing the same system a
 The system I use the most is `Arch Linux`
 But I still use Debian, Alpine and VM's either with VMWare or VBox or Docker
 
-These dotfiles will automatically install
+These dotfiles will automatically install everything you need to have a full system with a lot of tools and configurations. Just like I use it.
 
 ## To install, make sure you don't have a .zshrc file, then run:
 
