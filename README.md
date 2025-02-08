@@ -47,14 +47,15 @@ make start-$DISTRO
 
 ```bash
 docker start -i $DISTRO
-
+```
 
 # Future features planned
+
 - Support for [Alpine Linux](https://www.alpinelinux.org)
 - Support for Windows (with oh-my-posh)
 - Actions to create updated .zshrc files on changes and an utility to update the .zshrc file. This will maintain every machine's .zshrc file updated
 
 # Future integrations planned
+
 - Automatic integration to access termux from the internet using the [tor network](https://wiki.termux.com/wiki/Bypassing_NAT#Tor)
 - Automatic desktop environment (or window manager) integrations for new virtual machines
-```
