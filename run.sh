@@ -1,22 +1,8 @@
-#!/bin/bash
+#!/bin/env bash
 
 set -e
 
 BASEDIR=$(dirname "$0")
-
-find_distribution() {
-    if [ -f '/etc/debian_version' ]; then
-        echo 'debian'
-    elif [ -f '/etc/arch-release' ]; then
-        echo 'arch'
-    elif [ -d '/data/data/com.termux' ]; then
-        echo 'termux'
-    elif [ -f '/etc/gentoo-release' ]; then
-        echo 'gentoo'
-    else
-        echo 'unknown'
-    fi
-}
 
 append() {
     if [ -f "$BASEDIR/$1" ]; then
@@ -27,21 +13,28 @@ append() {
 }
 
 GENERAL_PACKAGES="zsh curl lsd ripgrep bat wget tmux vim"
-TERMUX_PACKAGES=$GENERAL_PACKAGES" zoxide fd zsh-completions dua"
+TERMUX_PACKAGES=$GENERAL_PACKAGES" zoxide fd zsh-completions dua termux-api"
 DEBIAN_PACKAGES=$GENERAL_PACKAGES" fd-find kitty thefuck"
 ARCH_PACKAGES=$GENERAL_PACKAGES" zoxide dua-cli zsh-completions kitty thefuck fd"
-DISTRO=$(find_distribution)
+if [ -f '/etc/debian_version' ]; then
+    DEBIAN=true
+elif [ -f '/etc/arch-release' ]; then
+    ARCH=true
+elif [ -d '/data/data/com.termux' ]; then
+    TERMUX=true
+elif [ -f '/etc/gentoo-release' ]; then
+    GENTOO=true
+fi
 
 # detect if termux
-if [ "$DISTRO" = 'termux' ]; then
-    TERMUX=true
+if [ $TERMUX ]; then
     echo 'Termux detected'
     pkg update -y
     pkg upgrade -y
     yes | pkg install -y $TERMUX_PACKAGES
 
 # detect if debian
-elif [ "$DISTRO" = 'debian' ]; then
+elif [ $DEBIAN ]; then
     echo 'Debian detected'
     sudo apt update -y
     sudo apt upgrade -y
@@ -53,14 +46,14 @@ elif [ "$DISTRO" = 'debian' ]; then
         sh -s -- --git Byron/dua-cli --target x86_64-unknown-linux-musl --crate dua --tag v2.29.0
 
 # detect if arch
-elif [ "$DISTRO" = 'arch' ]; then
+elif [ $ARCH ]; then
     echo 'Arch detected'
     sudo pacman -Syuv --noconfirm --needed $ARCH_PACKAGES
 
 # detect if gentoo
-elif [ "$DISTRO" = 'gentoo' ]; then
+elif [ $GENTOO ]; then
     echo 'Gentoo detected'
-    sudo emerge -n zsh zsh-completions neovim kitty wget tmux
+    sudo emerge -n zsh zsh-completions vim kitty wget tmux
     cargo install lsd bat fd-find dua-cli zoxide ripgrep17
 fi
 
@@ -82,12 +75,11 @@ cp $BASEDIR/p10k/.p10k.zsh ~/.p10k.zsh
 append .extensions.sh
 append .zshrc
 
-# arch
-if [ "$DISTRO" = 'arch' ]; then
-    append .zshrc-arch.sh
-fi
-# debian
-if [ "$DISTRO" = 'debian' ]; then
+# unique aliases
+[ $ARCH ] && append .zshrc-arch.sh
+
+# special aliases due to debian's funky package names
+if [ $DEBIAN ]; then
     append .zshrc-debian.sh
 else
     append "alias cat=bat"
@@ -96,5 +88,15 @@ fi
 
 append aliases.sh
 append .zshrc-end.sh
+
+zsh -ic 'source ~/.local/share/zinit/plugins/romkatv---powerlevel10k/gitstatus/install'
+
+source $BASEDIR/tools/prompt.sh
+
+if [ $TERMUX ]; then
+    echo 'Restart termux to apply changes'
+else
+    echo 'Restart your session to apply changes'
+fi
 
 exit 0
