@@ -98,5 +98,3 @@ if [ $TERMUX ]; then
 else
     echo 'Restart your session to apply changes'
 fi
-
-exit 0
