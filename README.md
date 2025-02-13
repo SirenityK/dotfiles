@@ -53,7 +53,7 @@ docker start -i $DISTRO
 
 - Support for [Alpine Linux](https://www.alpinelinux.org)
 - Support for Windows (with oh-my-posh)
-- Cron jobs to sync histfiles trough a cloud and to [simplify histfile](https://github.com/sirenityk/histfilesimp)
+- Cron jobs to sync histfiles trough a cloud, [simplify the histfile](https://github.com/sirenityk/histfilesimp), sync [zoxide](https://github.com/ajeetdsouza/zoxide)'s db
 - Actions to create updated .zshrc files on changes and an utility to update the .zshrc file. This will maintain every machine's .zshrc file updated
 - Add private links to download vm's for both [VBox](https://www.virtualbox.org) and [VMWare](https://www.vmware.com/products/desktop-hypervisor/workstation-and-fusion); with state snapshots with tty, environments and so on already set up
 - After set up VM's download support, add actions to build images of these and upload updated VMs automatically. With support for docker too
