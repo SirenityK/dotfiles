@@ -63,7 +63,7 @@ autoload -U select-word-style
 select-word-style bash
 
 export EDITOR=vim
-WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>'
+WORDCHARS=''
 HISTFILE=~/.histfile
 HISTSIZE=10000
 SAVEHIST=10000
