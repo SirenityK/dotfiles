@@ -70,6 +70,11 @@ fi
     append '# end pyenv'
     append_endline
     curl https://pyenv.run | bash
+    if [ $DEBIAN ]; then
+        sudo apt install -y build-essential libssl-dev zlib1g-dev \
+            libbz2-dev libreadline-dev libsqlite3-dev curl git \
+            libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+    fi
 }
 
 (yn "Install uv?" || [ $UV ]) && {
@@ -88,8 +93,7 @@ fi
         append 'eval "$(uv generate-shell-completion zsh)"'
     fi
     append 'eval "$(uvx --generate-shell-completion zsh)"'
-    append "alias uvp='uv pip'"
-    append "export UV_SYSTEM_PYTHON=true"
+    append "alias uvp='UV_SYSTEM_PYTHON=true uv pip'"
     append '# end uv'
     append_endline
 }

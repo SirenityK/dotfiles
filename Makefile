@@ -15,7 +15,7 @@ define build_image
 	UV=$$(set_env_var uv); \
 	NVM=$$(set_env_var nvm); \
 	docker build --build-arg PYENV=$$PYENV --build-arg UV=$$UV --build-arg NVM=$$NVM -t $(USERNAME)/$(1) -f Dockerfile.$(1) . && \
-	docker run -d -e TERM -e COLORTERM -e LC_ALL=C.UTF-8 -it --name $(1) $(USERNAME)/$(1) && \
+	docker run -d --gpus all -e TERM -e COLORTERM -e LC_ALL=C.UTF-8 -it --name $(1) $(USERNAME)/$(1) && \
 	docker kill $(1)
 endef
 
