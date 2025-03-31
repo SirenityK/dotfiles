@@ -1,22 +1,39 @@
 clone() {
-    if [[ $1 =~ ^https://github\.com/ ]]; then
+    local repo_url="$1"
 
-        REPO_URL=$1
-    else
-
-        REPO_URL="https://github.com/$1"
+    if [ -z "$repo_url" ]; then
+        echo "Error: No repository specified."
+        echo "Usage: clone username/repo [additional git clone options] or clone full_url [additional git clone options]"
+        return 1
     fi
 
-    git clone "$REPO_URL" "${@:2}"
+    shift
 
-    if [[ $? -ne 0 ]]; then
-        echo "Error: No GitHub repository found at $REPO_URL"
+    if [[ "$repo_url" != http* && "$repo_url" == */* ]]; then
+        repo_url="https://github.com/$repo_url"
+    fi
+
+    if [[ "$repo_url" == https://github.com/* ]]; then
+        local check_url=$(echo "$repo_url" | sed 's/github.com/api.github.com\/repos/g')
+
+        if ! curl --silent --head --fail "$check_url" >/dev/null; then
+            echo "Error: No GitHub repository found at $repo_url"
+            return 1
+        fi
+    fi
+
+    echo "Cloning from $repo_url"
+    git clone "$repo_url" "$@"
+
+    if [ $? -eq 0 ]; then
+        echo "Repository cloned successfully."
+    else
+        echo "Failed to clone repository."
         return 1
     fi
 }
 
 sclone() {
-    # shallow clone
     clone --depth 1 "$@"
 }
 
