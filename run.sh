@@ -30,7 +30,7 @@ fi
 if [ $TERMUX ]; then
     echo 'Termux detected'
     pkg update -y
-    pkg upgrade -y
+    yes | pkg upgrade -y
     yes | pkg install -y $TERMUX_PACKAGES
 
 # detect if debian
