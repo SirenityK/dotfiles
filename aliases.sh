@@ -34,7 +34,7 @@ clone() {
 }
 
 sclone() {
-    clone --depth 1 "$@"
+    clone "$@" --depth 1
 }
 
 eval "$(zoxide init zsh)"
