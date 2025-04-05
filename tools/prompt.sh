@@ -114,10 +114,10 @@ if [ $TERMUX ]; then
         touch $FLAG_FILE
         pkg install -y termux-services openssh
         mkdir -p ~/.termux/boot
-        append "sv-enable sshd" ~/.termux-setup-continue.sh
-        append 'echo "Setup complete!"' ~/.termux-setup-continue.sh
+        append "sv-enable sshd" $FLAG_FILE
+        append 'echo "Setup complete!"' $FLAG_FILE
         append '# services'
-        append '[ -f ~/.termux-setup-continue.sh ] && source ~/.termux-setup-continue.sh && rm ~/.termux-setup-continue.sh'
+        append "[ -f $FLAG_FILE ] && source $FLAG_FILE && rm $FLAG_FILE"
         append '# end services'
         append '#!/data/data/com.termux/files/usr/bin/sh' ~/.termux/boot/start-services
         append 'termux-wake-lock' ~/.termux/boot/start-services
