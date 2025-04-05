@@ -106,6 +106,9 @@ fi
 }
 
 if [ $TERMUX ]; then
+    yn "Setup storage?" && {
+        termux-setup-storage
+    }
     yn "Initialize ssh-server?" && {
         FLAG_FILE=~/.termux-setup-continue.sh
         touch $FLAG_FILE
@@ -120,6 +123,9 @@ if [ $TERMUX ]; then
         append 'termux-wake-lock' ~/.termux/boot/start-services
         append '. $PREFIX/etc/profile' ~/.termux/boot/start-services
         append_endline ~/.termux/boot/start-services
+        yn "Update the password" && {
+            passwd
+        }
         yn "To continue, you need to restart termux. Continue?" && {
             am startservice -a com.termux.service_stop com.termux/.app.TermuxService
         }
