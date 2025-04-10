@@ -55,29 +55,10 @@ yn "This script will format your disk. Do you want to continue?" || exit 1
 }
 
 # function as string
-CHROOT_CMD=$(
-    cat <<EOF
-if ! [ -z "$MINIMAL" ]; then
-    grub-install /dev/sda
-    grub-mkconfig -o boot/grub/grub.cfg
-    systemctl enable NetworkManager
-fi
-ln -sf /usr/share/zoneinfo/Mexico/BajaNorte /etc/localtime
-hwclock --systohc
-echo "en_US.UTF-8 UTF-8" >>/etc/locale.gen
-locale-gen
-echo "LANG=en_US.UTF-8" >>/etc/locale.conf
-vim /etc/sudoers
-vim /etc/pacman.conf
-useradd -m -G wheel $USER
-passwd $USER
-passwd
-exit;
-EOF
-)
+CHROOT_CMD='ln -sf /usr/share/zoneinfo/Mexico/BajaNorte /etc/localtime; hwclock --systohc; echo "en_US.UTF-8 UTF-8" >>/etc/locale.gen; locale-gen; echo "LANG=en_US.UTF-8" >>/etc/locale.conf; vim /etc/sudoers; vim /etc/pacman.conf; useradd -m -G wheel $USER; passwd $USER; passwd'
 
 if [ -z $YAY ]; then
-    CHROOT_CMD+="sudo pacman -S git && git clone https://aur.archlinux.org/yay-bin.git yay && cd yay && makepkg -si --noconfirm && cd .. && rm -rf yay"
+    CHROOT_CMD+=";sudo pacman -S git && git clone https://aur.archlinux.org/yay-bin.git yay && cd yay && makepkg -si --noconfirm && cd .. && rm -rf yay"
 fi
 
 echo $CHROOT_CMD >/tmp/chroot_cmd.sh
