@@ -35,16 +35,17 @@ yn() {
     done
 }
 
-PACKAGES="linux base"
+PACKAGES="linux base vim"
 read -p "Enter your username: " USER
 if [ -z "$USER" ]; then
     echo "Username cannot be empty"
     exit 1
 fi
 
-yn "This script will format your disk. Do you want to continue?" && true
-! yn "Minimum install? (no networking, no devtools, only kernel and base)" && {
-    PACKAGES+="base-devel grub networkmanager reflector git vim"
+yn "This script will format your disk. Do you want to continue?" || exit 1
+! yn "Minimum install? (no networking, no devtools, only kernel, vim and base)" && {
+    PACKAGES+="base-devel grub networkmanager reflector git"
+    MINIMAL=true
     yn "Install linux-firmware" && {
         PACKAGES+="linux-firmware"
     }
@@ -56,21 +57,22 @@ yn "This script will format your disk. Do you want to continue?" && true
 # function as string
 CHROOT_CMD=$(
     cat <<EOF
-grub-install /dev/sda
-grub-mkconfig -o boot/grub/grub.cfg
+if ! [ -z "$MINIMAL" ]; then
+    grub-install /dev/sda
+    grub-mkconfig -o boot/grub/grub.cfg
+    systemctl enable NetworkManager
+fi
 ln -sf /usr/share/zoneinfo/Mexico/BajaNorte /etc/localtime
 hwclock --systohc
 echo "en_US.UTF-8 UTF-8" >>/etc/locale.gen
 locale-gen
 echo "LANG=en_US.UTF-8" >>/etc/locale.conf
-systemctl enable NetworkManager
 vim /etc/sudoers
 vim /etc/pacman.conf
 useradd -m -G wheel $USER
 passwd $USER
 passwd
-exit
-
+exit;
 EOF
 )
 
