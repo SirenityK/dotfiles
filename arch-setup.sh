@@ -80,7 +80,7 @@ fi
 
 vim /etc/pacman.conf
 # delete full disk first
-umount -R /mnt
+umount -R /mnt || true
 wipefs -a /dev/sda
 
 parted -s /dev/sda mklabel msdos
