@@ -80,6 +80,8 @@ if [ -z $YAY ]; then
     CHROOT_CMD+="sudo pacman -S git && git clone https://aur.archlinux.org/yay-bin.git yay && cd yay && makepkg -si --noconfirm && cd .. && rm -rf yay"
 fi
 
+echo $CHROOT_CMD >/tmp/chroot_cmd.sh
+
 vim /etc/pacman.conf
 # delete full disk first
 umount -R /mnt || true
@@ -93,7 +95,7 @@ mount /dev/sda1 /mnt
 rm -fr /etc/gnupg
 pacstrap -K /mnt $PACKAGES
 genfstab -U /mnt >>/mnt/etc/fstab
-arch-chroot /mnt bash -c "$CHROOT_CMD"
+arch-chroot /mnt bash /tmp/chroot_cmd.sh
 umount -R /mnt
 echo Installed! rebooting in 2 seconds...
 sleep 2
