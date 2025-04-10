@@ -74,7 +74,7 @@ mount /dev/sda1 /mnt
 rm -fr /etc/gnupg
 pacstrap -K /mnt $PACKAGES
 genfstab -U /mnt >>/mnt/etc/fstab
-arch-chroot /mnt bash $CHROOT_CMD
+arch-chroot /mnt bash -c $CHROOT_CMD
 umount -R /mnt
 echo Installed! rebooting in 2 seconds...
 sleep 2
