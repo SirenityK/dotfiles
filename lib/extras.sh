@@ -140,6 +140,8 @@ install_fnm() {
         as_root pacman -S --noconfirm --needed fnm
     else
         command -v unzip >/dev/null || install_unzip
+        # Recent Node builds link libatomic, which minimal RHEL-family systems lack.
+        [ "$OS" = fedora ] && try_install dnf_install libatomic
         # The installer replaces the binary with the latest release on every run.
         curl -fsSL https://fnm.vercel.app/install |
             bash -s -- --install-dir ~/.local/share/fnm --skip-shell || {
