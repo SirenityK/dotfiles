@@ -4,50 +4,64 @@ But I still use Debian, Alpine and VM's either with VMWare or VBox or Docker
 
 These dotfiles will automatically install everything you need to have a full system with a lot of tools and configurations. Just like I use it.
 
-## To install, make sure you don't have a .zshrc file, then run:
+Supported systems: Arch (and derivatives), Debian and Ubuntu, Fedora, Rocky and Alma (and other RHEL relatives), Gentoo and Termux.
+
+## Install
 
 ```bash
 bash run.sh
 ```
 
-## Create a container with Docker:
+Run it again whenever you like: it updates the tools and regenerates `~/.zshrc` instead of appending to it.
+An existing `~/.zshrc` that the script did not generate is backed up first. Put personal additions in `~/.zshrc.local`, which is never touched.
 
-Archlinux and Ubuntu containers are currently supported
+The script asks about the optional parts. To skip the questions, answer them up front with environment variables:
 
-### Make (recommended)
+| Variable | Values | What it installs |
+| --- | --- | --- |
+| `AUR_HELPER` | `paru`, `paru-bin`, `yay`, `yay-bin`, `none` | AUR helper (Arch only) |
+| `TOKEI` | `true` / `false` | tokei |
+| `PYENV` | `true` / `false` | pyenv and the packages needed to build Python |
+| `UV` | `true` / `false` | uv |
+| `BUN` | `true` / `false` | bun (not on Termux) |
+| `FNM` | `true` / `false` | fnm and the latest LTS Node; switches Node on `cd` from `.nvmrc` / `.node-version` (not on Termux) |
+| `CLAUDE`, `CODEX`, `OPENCODE`, `PI` | `true` / `false` | AI coding harnesses, from their own installers so they stay current |
+| `DESKTOP` | `true` / `false` | kitty and the MesloLGS NF font (asked only in a graphical session) |
+| `SSHD` | `true` / `false` | sshd that starts with Termux and on boot (Termux only) |
+| `STORAGE` | `true` / `false` | `termux-setup-storage` (Termux only) |
 
-```bash
-make build-arch
-```
-
-```bash
-make build-ubuntu
-```
-
-```bash
-make build-all
-```
-
-### Bash
-
-```bash
-export DISTRO=arch # Select a base container, in this case we're using archlinux
-```
+With bun installed, opencode is installed with `bun install -g`, and so are codex and pi when Node is available too (they run on Node); otherwise each uses its curl installer.
 
 ```bash
-docker build -t sirenityk/$DISTRO -f Dockerfile.$DISTRO .
-docker run -e TERM -e COLORTERM -e LC_ALL=C.UTF-8 -it --name $DISTRO sirenityk/$DISTRO
+TOKEI=true PYENV=false UV=true BUN=true FNM=true CLAUDE=true bash run.sh
 ```
 
-### Running the container
+Always installed: zsh, tmux (not on Termux), neovim (`vim` is an alias for it), btop, eza, ripgrep, bat, fd, zoxide and dua.
+Tools missing from a distro's repositories (`dua` outside Arch, Fedora and Termux, or `eza` and `zoxide` on older releases) are installed from their latest GitHub release into `~/.local/bin`, and updated on later runs.
+
+Machines set up with nvm keep using it until fnm is installed.
+
+### Termux
+
+sshd listens on port 8022. Install the [Termux:Boot](https://wiki.termux.com/wiki/Termux:Boot) app to start it when the phone boots.
+Upgrading `openssh` disables sshd again (the package reinstalls its `down` file), so every new Termux session re-enables it.
+bun and fnm have no Android builds, so they are not offered. Of the AI harnesses, only codex's installer supports Android; the others warn and are skipped.
+
+## Docker containers
+
+The containers use [just](https://github.com/casey/just). Run `just` to list the recipes.
 
 ```bash
-make start-$DISTRO
+just build arch       # also: ubuntu, debian, fedora, rocky, alma
+just start arch
+just clean arch
+just build-all
 ```
 
-```bash
-docker start -i $DISTRO
-```
+`just build` asks which extras to install; preset the answers with the variables above, e.g. `PYENV=false UV=true AUR_HELPER=paru-bin just build arch`.
+`BASE` picks another base image, e.g. `BASE=almalinux:10 just build alma`.
+
+`just test arch` builds an image with every extra, reruns the installer to check it changes nothing, and checks the shell.
 
 # Future features planned
 
