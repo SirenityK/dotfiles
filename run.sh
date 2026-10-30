@@ -1,100 +1,63 @@
-#!/bin/env bash
+#!/usr/bin/env bash
+# Sets up zsh and the command line tools. Safe to run again at any time: it
+# updates what is installed and regenerates ~/.zshrc instead of appending to it.
 
-set -e
+set -euo pipefail
 
-BASEDIR=$(dirname "$0")
+BASEDIR=$(cd "$(dirname "$0")" && pwd)
+export PATH="$HOME/.local/bin:$HOME/.bun/bin:$HOME/.opencode/bin:$PATH"
 
-append() {
-    if [ -f "$BASEDIR/$1" ]; then
-        cat $BASEDIR/$1 >>~/.zshrc
-    else
-        echo $1 >>~/.zshrc
+. "$BASEDIR/lib/common.sh"
+. "$BASEDIR/lib/packages.sh"
+. "$BASEDIR/lib/extras.sh"
+
+detect_os
+info "Detected $OS_ID ($OS)"
+
+install_packages
+install_aur_helper
+install_tokei
+install_pyenv
+install_uv
+# bun comes before the node tools so they can be installed with it.
+install_bun
+install_fnm
+install_harnesses
+if [ "$OS" = termux ]; then
+    termux_extras
+else
+    install_desktop
+fi
+
+# ~/.zshrc is assembled from the parts that apply to this system.
+parts=()
+# tmux starts first so the shell inside it does the rest. Not on Termux, where tmux is unwanted.
+[ "$OS" != termux ] && parts+=("$BASEDIR/zsh/tmux.zsh")
+parts+=("$BASEDIR/zsh/init.zsh" "$BASEDIR/zsh/plugins.zsh" "$BASEDIR/zsh/tools.zsh" "$BASEDIR/zsh/aliases.zsh")
+[ -f "$BASEDIR/zsh/$OS.zsh" ] && parts+=("$BASEDIR/zsh/$OS.zsh")
+parts+=("$BASEDIR/zsh/end.zsh")
+write_zshrc "${parts[@]}"
+cp "$BASEDIR/p10k/.p10k.zsh" ~/.p10k.zsh
+
+# Download zinit, the plugins and gitstatusd now rather than on the first prompt.
+info 'Installing zsh plugins'
+DOTFILES_NO_TMUX=1 zsh -ic '@zinit-scheduler burst' </dev/null
+zsh -c '. ~/.local/share/zinit/plugins/romkatv---powerlevel10k/gitstatus/install' </dev/null
+
+# Make zsh the login shell.
+zsh_path=$(command -v zsh)
+if [ "$OS" = termux ]; then
+    [ "$(basename "$(readlink -f ~/.termux/shell 2>/dev/null)")" = zsh ] || chsh -s zsh
+else
+    user=$(id -un)
+    if [ "$(getent passwd "$user" | cut -d: -f7)" != "$zsh_path" ]; then
+        grep -qx "$zsh_path" /etc/shells || echo "$zsh_path" | as_root tee -a /etc/shells >/dev/null
+        as_root usermod -s "$zsh_path" "$user"
     fi
-}
-
-GENERAL_PACKAGES="zsh curl lsd ripgrep bat wget tmux vim"
-TERMUX_PACKAGES=$GENERAL_PACKAGES" zoxide fd zsh-completions dua termux-api"
-DEBIAN_PACKAGES=$GENERAL_PACKAGES" fd-find kitty thefuck"
-ARCH_PACKAGES=$GENERAL_PACKAGES" zoxide dua-cli zsh-completions kitty thefuck fd"
-if [ -f '/etc/debian_version' ]; then
-    DEBIAN=true
-elif [ -f '/etc/arch-release' ]; then
-    ARCH=true
-elif [ -d '/data/data/com.termux' ]; then
-    TERMUX=true
-elif [ -f '/etc/gentoo-release' ]; then
-    GENTOO=true
 fi
 
-# detect if termux
-if [ $TERMUX ]; then
-    echo 'Termux detected'
-    pkg update -y
-    yes | pkg upgrade -y
-    yes | pkg install -y $TERMUX_PACKAGES
-
-# detect if debian
-elif [ $DEBIAN ]; then
-    echo 'Debian detected'
-    sudo apt update -y
-    sudo apt upgrade -y
-    sudo apt install -y $DEBIAN_PACKAGES
-    # zoxide
-    curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
-    # dua
-    curl -LSfs https://raw.githubusercontent.com/Byron/dua-cli/master/ci/install.sh |
-        sh -s -- --git Byron/dua-cli --target x86_64-unknown-linux-musl --crate dua --tag v2.29.0
-
-# detect if arch
-elif [ $ARCH ]; then
-    echo 'Arch detected'
-    sudo pacman -Syuv --noconfirm --needed $ARCH_PACKAGES
-
-# detect if gentoo
-elif [ $GENTOO ]; then
-    echo 'Gentoo detected'
-    sudo emerge -n zsh zsh-completions vim kitty wget tmux
-    cargo install lsd bat fd-find dua-cli zoxide ripgrep17
-fi
-
-LINK=https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf
-if [ ! $TERMUX ]; then
-    cp -r $BASEDIR/.config ~
-    sudo chsh sirenityk -s $(cat /etc/shells | grep zsh | tail -1)
-    wget $LINK -P ~/.local/share/fonts/
+if [ "$OS" = termux ]; then
+    info 'Done. Restart Termux to apply the changes.'
 else
-    wget $LINK -O ~/.termux/font.ttf
-    termux-reload-settings
-    chsh -s zsh
-fi
-
-# zinit
-yes | bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)"
-
-cp $BASEDIR/p10k/.p10k.zsh ~/.p10k.zsh
-append .extensions.sh
-append .zshrc
-
-# unique aliases
-[ $ARCH ] && append .zshrc-arch.sh
-
-# special aliases due to debian's funky package names
-if [ $DEBIAN ]; then
-    append .zshrc-debian.sh
-else
-    append "alias cat=bat"
-    append "alias find=fd"
-fi
-
-append aliases.sh
-append .zshrc-end.sh
-
-zsh -ic 'source ~/.local/share/zinit/plugins/romkatv---powerlevel10k/gitstatus/install'
-
-source $BASEDIR/tools/prompt.sh
-
-if [ $TERMUX ]; then
-    echo 'Restart termux to apply changes'
-else
-    echo 'Restart your session to apply changes'
+    info 'Done. Log out and back in (or run `exec zsh`) to apply the changes.'
 fi
