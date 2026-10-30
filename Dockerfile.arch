@@ -1,21 +1,20 @@
-FROM archlinux:base-devel
+ARG BASE=archlinux:base-devel
+FROM ${BASE}
 
-RUN pacman -Syu --noconfirm --needed git less
-RUN echo "%wheel ALL=(ALL:ALL) NOPASSWD: ALL" >>/etc/sudoers
-RUN useradd -m sirenityk
-RUN usermod -aG wheel sirenityk
+ARG USERNAME=dev
+RUN pacman -Syu --noconfirm --needed git less sudo
+RUN useradd -m "$USERNAME" && echo "$USERNAME ALL=(ALL:ALL) NOPASSWD: ALL" >/etc/sudoers.d/"$USERNAME"
 
-USER sirenityk
-WORKDIR /home/sirenityk
-RUN git clone https://aur.archlinux.org/yay-bin yay --depth 1
-RUN cd yay && makepkg -si --noconfirm
-COPY . dotfiles
-ARG PYENV=false
-ARG UV=false
-ARG NVM=false
+USER $USERNAME
+WORKDIR /home/$USERNAME
+COPY --chown=$USERNAME . dotfiles
+ARG AUR_HELPER=yay-bin
+# Optional extras, see the README. AUR_HELPER only applies to Arch.
+ARG TOKEI=false PYENV=false UV=false BUN=false FNM=false
+ARG CLAUDE=false CODEX=false OPENCODE=false PI=false
 RUN bash dotfiles/run.sh
-RUN sudo rm -fr dotfiles yay .bash*
-RUN yay -Rscnu --noconfirm $(yay -Qdtq); exit 0
-RUN yes | yay -Scc
+RUN sudo rm -rf dotfiles .bash* && \
+    { pacman -Qdtq | xargs -r sudo pacman -Rscnu --noconfirm || true; } && \
+    sudo rm -rf /var/cache/pacman/pkg/* ~/.cache/yay ~/.cache/paru
 
-CMD ["/usr/sbin/zsh"]
+CMD ["zsh"]

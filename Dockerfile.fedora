@@ -1,0 +1,18 @@
+# Fedora and its RHEL relatives: BASE=fedora:latest, almalinux:9, rockylinux:9, ...
+ARG BASE=fedora:latest
+FROM ${BASE}
+
+ARG USERNAME=dev
+RUN dnf install -y git sudo less shadow-utils && dnf clean all
+RUN useradd -m "$USERNAME" && echo "$USERNAME ALL=(ALL:ALL) NOPASSWD: ALL" >/etc/sudoers.d/"$USERNAME"
+
+USER $USERNAME
+WORKDIR /home/$USERNAME
+COPY --chown=$USERNAME . dotfiles
+# Optional extras, see the README. AUR_HELPER only applies to Arch.
+ARG TOKEI=false PYENV=false UV=false BUN=false FNM=false
+ARG CLAUDE=false CODEX=false OPENCODE=false PI=false
+RUN bash dotfiles/run.sh
+RUN sudo rm -rf dotfiles .bash* && sudo dnf clean all
+
+CMD ["zsh"]

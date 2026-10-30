@@ -1,4 +1,4 @@
 Dockerfile*
-Makefile
+justfile
 README.md
 .git

@@ -1,0 +1,19 @@
+# Debian and Ubuntu: BASE=debian:stable or BASE=ubuntu:latest
+ARG BASE=ubuntu:latest
+FROM ${BASE}
+
+ARG USERNAME=dev
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get upgrade -y && apt-get install -y git sudo less
+RUN useradd -m "$USERNAME" && echo "$USERNAME ALL=(ALL:ALL) NOPASSWD: ALL" >/etc/sudoers.d/"$USERNAME"
+
+USER $USERNAME
+WORKDIR /home/$USERNAME
+COPY --chown=$USERNAME . dotfiles
+# Optional extras, see the README. AUR_HELPER only applies to Arch.
+ARG TOKEI=false PYENV=false UV=false BUN=false FNM=false
+ARG CLAUDE=false CODEX=false OPENCODE=false PI=false
+RUN bash dotfiles/run.sh
+RUN sudo rm -rf dotfiles .bash* && sudo apt-get autopurge -y && sudo apt-get clean
+
+CMD ["zsh"]
