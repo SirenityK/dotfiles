@@ -2,7 +2,7 @@ alias cd=z
 alias cat=bat
 alias find=fd
 alias c=clear
-alias ls='eza --icons'
+alias ls='eza --icons=auto'
 alias ip='ip --color=auto'
 alias grep='rg'
 alias pull='git pull'
