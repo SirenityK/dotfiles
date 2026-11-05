@@ -5,7 +5,7 @@ set shell := ["bash", "-euo", "pipefail", "-c"]
 # The container user mirrors yours; root gets a regular "dev" user instead.
 user := if `id -un` == "root" { "dev" } else { `id -un` }
 distros := "arch ubuntu debian fedora rocky alma"
-all_extras := "TOKEI=true PYENV=true UV=true BUN=true FNM=true CLAUDE=true CODEX=true OPENCODE=true PI=true"
+all_extras := "TOKEI=true PYENV=true UV=true YTDLP=true FFMPEG=true BUN=true FNM=true CLAUDE=true CODEX=true OPENCODE=true PI=true"
 
 _default:
     @just --list
@@ -29,7 +29,7 @@ build distro *args:
     esac
     base=${BASE:-$base}
     extra=()
-    for option in TOKEI PYENV UV BUN FNM CLAUDE CODEX OPENCODE PI; do
+    for option in TOKEI PYENV UV YTDLP FFMPEG BUN FNM CLAUDE CODEX OPENCODE PI; do
         value=${!option:-}
         if [ -z "$value" ]; then
             value=false

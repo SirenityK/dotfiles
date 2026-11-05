@@ -23,6 +23,8 @@ The script asks about the optional parts. To skip the questions, answer them up 
 | `TOKEI` | `true` / `false` | tokei |
 | `PYENV` | `true` / `false` | pyenv and the packages needed to build Python |
 | `UV` | `true` / `false` | uv |
+| `YTDLP` | `true` / `false` | yt-dlp in `~/.venv` (only offered when uv is accepted), a clipboard tool for the session (wl-clipboard or xclip), and the `ytdw` / `get-post` aliases |
+| `FFMPEG` | `true` / `false` | ffmpeg and `$FFMPEG_BT709_FILTER`; also the `ffmpeg-cuda` alias when an NVIDIA GPU with NVENC is detected |
 | `BUN` | `true` / `false` | bun (not on Termux) |
 | `FNM` | `true` / `false` | fnm and the latest LTS Node; switches Node on `cd` from `.nvmrc` / `.node-version` (not on Termux) |
 | `CLAUDE`, `CODEX`, `OPENCODE`, `PI` | `true` / `false` | AI coding harnesses, from their own installers so they stay current |
@@ -38,8 +40,6 @@ TOKEI=true PYENV=false UV=true BUN=true FNM=true CLAUDE=true bash run.sh
 
 Always installed: zsh, tmux (not on Termux), neovim (`vim` is an alias for it), btop, eza, ripgrep, bat, fd, zoxide and dua.
 Tools missing from a distro's repositories (`dua` outside Arch, Fedora and Termux, or `eza` and `zoxide` on older releases) are installed from their latest GitHub release into `~/.local/bin`, and updated on later runs.
-
-Machines set up with nvm keep using it until fnm is installed.
 
 ### Termux
 

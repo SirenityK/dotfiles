@@ -2,7 +2,7 @@
 _cached_source zoxide zoxide init zsh
 
 (( $+commands[dua] )) && alias du='dua'
-_cached_completion dua dua completions zs
+_cached_completion dua dua completions zsh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

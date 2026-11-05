@@ -41,7 +41,7 @@ errors=$(zsh -ic '@zinit-scheduler burst' 2>&1 >/dev/null </dev/null)
 check 'zsh starts without errors' '[ -z "$errors" ]'
 [ -z "$errors" ] || echo "$errors"
 # Tools of the extras that EXTRAS enables (e.g. "BUN=true FNM=false").
-declare -A extra_tools=([TOKEI]=tokei [PYENV]=pyenv [UV]='uv uvx' [BUN]=bun [FNM]='fnm node'
+declare -A extra_tools=([TOKEI]=tokei [PYENV]=pyenv [UV]='uv uvx' [FFMPEG]=ffmpeg [BUN]=bun [FNM]='fnm node'
     [CLAUDE]=claude [CODEX]=codex [OPENCODE]=opencode [PI]=pi)
 declare -A enabled=()
 for assignment in $EXTRAS; do enabled[${assignment%%=*}]=${assignment#*=}; done
@@ -61,6 +61,9 @@ check 'ls is eza' "zsh_check 'whence ls' | grep -q eza"
 check 'EDITOR is nvim' "zsh_check 'echo \$EDITOR' | grep -qx nvim"
 [ "${enabled[FNM]:-}" = true ] && check 'fnm completion is registered' "zsh_check '[[ \${_comps[fnm]} = _fnm ]]'"
 [ "${enabled[FNM]:-}" = true ] && check 'fnm switches node on cd' "mkdir -p /tmp/nodetest && echo 20 >/tmp/nodetest/.nvmrc && zsh_check 'fnm install 20 >/dev/null 2>&1; cd /tmp/nodetest && node --version' | grep -q '^v20'"
+[ "${enabled[YTDLP]:-}" = true ] && check 'yt-dlp runs' '~/.venv/bin/yt-dlp --version'
+[ "${enabled[YTDLP]:-}" = true ] && check 'ytdw and get-post are defined' "zsh_check 'whence -w ytdw get-post'"
+[ "${enabled[FFMPEG]:-}" = true ] && check 'ffmpeg bt709 filter is set' "zsh_check 'echo \$FFMPEG_BT709_FILTER' | grep -q out_transfer=bt709"
 check 'cd is zoxide' "zsh_check 'whence -w __zoxide_z'"
 check 'history keeps unique commands' "zsh_check '[[ -o HIST_IGNORE_ALL_DUPS && -o HIST_FIND_NO_DUPS ]]'"
 check 'completion is initialized' "zsh_check 'whence -w compdef | grep -q function'"

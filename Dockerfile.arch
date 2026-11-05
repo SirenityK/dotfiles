@@ -10,7 +10,7 @@ WORKDIR /home/$USERNAME
 COPY --chown=$USERNAME . dotfiles
 ARG AUR_HELPER=yay-bin
 # Optional extras, see the README. AUR_HELPER only applies to Arch.
-ARG TOKEI=false PYENV=false UV=false BUN=false FNM=false
+ARG TOKEI=false PYENV=false UV=false YTDLP=false FFMPEG=false BUN=false FNM=false
 ARG CLAUDE=false CODEX=false OPENCODE=false PI=false
 RUN bash dotfiles/run.sh
 RUN sudo rm -rf dotfiles .bash* && \

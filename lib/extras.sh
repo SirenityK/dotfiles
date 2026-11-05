@@ -1,5 +1,5 @@
 # Optional components. Each one asks first, or reads its answer from the
-# environment (TOKEI, PYENV, UV, BUN, FNM, CLAUDE, CODEX, OPENCODE, PI, DESKTOP,
+# environment (TOKEI, PYENV, UV, YTDLP, FFMPEG, BUN, FNM, CLAUDE, CODEX, OPENCODE, PI, DESKTOP,
 # STORAGE, SSHD set to true or false, and AUR_HELPER set to paru, paru-bin, yay,
 # yay-bin or none).
 # The zshrc only loads a tool when it is installed, so answering no on a later
@@ -71,6 +71,7 @@ install_pyenv() {
 
 install_uv() {
     want UV 'Install uv?' || return 0
+    UV_ACCEPTED=true
     case $OS in
     termux) pkg install -y uv ;;
     arch) as_root pacman -S --noconfirm --needed uv ;;
@@ -82,6 +83,59 @@ install_uv() {
         fi
         ;;
     esac
+}
+
+# yt-dlp lives in a uv-managed venv in $HOME, so it can be updated without touching
+# the system Python. It is only offered when uv was accepted in this run (an existing
+# uv is not enough: answering no to uv skips this too).
+# The clipboard tool is for the ytdw alias, which downloads the URL you copied: it
+# follows the graphical session (wl-clipboard on Wayland, xclip on X11), and Termux
+# already has termux-clipboard-get from termux-api.
+install_ytdlp() {
+    [ "${UV_ACCEPTED:-}" = true ] || return 0
+    want YTDLP 'Install yt-dlp (in ~/.venv) and the ytdw / get-post aliases?' || return 0
+    local clip=''
+    if [ -n "${WAYLAND_DISPLAY:-}" ]; then
+        clip=wl-clipboard
+    elif [ -n "${DISPLAY:-}" ]; then
+        clip=xclip
+    fi
+    if [ -n "$clip" ] && [ "$OS" != termux ]; then
+        case $OS in
+        arch) as_root pacman -S --noconfirm --needed "$clip" ;;
+        debian) apt_install "$clip" ;;
+        fedora) try_install dnf_install "$clip" ;;
+        gentoo)
+            case $clip in
+            wl-clipboard) as_root emerge --noreplace --quiet gui-apps/wl-clipboard ;;
+            xclip) as_root emerge --noreplace --quiet x11-misc/xclip ;;
+            esac
+            ;;
+        esac
+    fi
+    [ -x ~/.venv/bin/python ] || uv venv ~/.venv
+    uv pip install --python ~/.venv/bin/python --upgrade yt-dlp ||
+        warn 'yt-dlp failed to install'
+}
+
+# FFMPEG_ACCEPTED and FFMPEG_CUDA tell run.sh which ffmpeg parts go in the zshrc.
+# ffmpeg-cuda needs an NVIDIA GPU and an ffmpeg built with NVENC.
+# (grep -q would exit early and SIGPIPE the writer, failing the pipeline under pipefail.)
+install_ffmpeg() {
+    want FFMPEG 'Install ffmpeg?' || return 0
+    case $OS in
+    termux) pkg install -y ffmpeg ;;
+    arch) as_root pacman -S --noconfirm --needed ffmpeg ;;
+    debian) apt_install ffmpeg ;;
+    fedora) try_install dnf_install ffmpeg-free ffmpeg ;;
+    gentoo) as_root emerge --noreplace --quiet media-video/ffmpeg ;;
+    esac
+    FFMPEG_ACCEPTED=true
+    if command -v nvidia-smi >/dev/null &&
+        nvidia-smi -L 2>/dev/null | grep '^GPU' >/dev/null &&
+        ffmpeg -hide_banner -encoders 2>/dev/null | grep nvenc >/dev/null; then
+        FFMPEG_CUDA=true
+    fi
 }
 
 install_bun() {
@@ -130,8 +184,8 @@ install_harnesses() {
     fi
 }
 
-# fnm replaces nvm: faster, and it switches Node versions on cd from .nvmrc or
-# .node-version files. The first install also installs the latest LTS Node.
+# fnm switches Node versions on cd from .nvmrc or .node-version files. The first
+# install also installs the latest LTS Node.
 install_fnm() {
     # fnm has no Android build; Termux has Node as the nodejs package.
     [ "$OS" = termux ] && return 0

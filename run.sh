@@ -19,6 +19,8 @@ install_aur_helper
 install_tokei
 install_pyenv
 install_uv
+install_ytdlp
+install_ffmpeg
 # bun comes before the node tools so they can be installed with it.
 install_bun
 install_fnm
@@ -34,6 +36,8 @@ parts=()
 # tmux starts first so the shell inside it does the rest. Not on Termux, where tmux is unwanted.
 [ "$OS" != termux ] && parts+=("$BASEDIR/zsh/tmux.zsh")
 parts+=("$BASEDIR/zsh/init.zsh" "$BASEDIR/zsh/plugins.zsh" "$BASEDIR/zsh/tools.zsh" "$BASEDIR/zsh/aliases.zsh")
+[ "${FFMPEG_ACCEPTED:-}" = true ] && parts+=("$BASEDIR/zsh/ffmpeg.zsh")
+[ "${FFMPEG_CUDA:-}" = true ] && parts+=("$BASEDIR/zsh/ffmpeg-cuda.zsh")
 [ -f "$BASEDIR/zsh/$OS.zsh" ] && parts+=("$BASEDIR/zsh/$OS.zsh")
 parts+=("$BASEDIR/zsh/end.zsh")
 write_zshrc "${parts[@]}"
