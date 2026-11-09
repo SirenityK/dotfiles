@@ -41,8 +41,15 @@ _cached_completion uvx uvx --generate-shell-completion zsh
 export PYENV_ROOT=${PYENV_ROOT:-$HOME/.pyenv}
 if [[ -d $PYENV_ROOT/bin ]]; then
     path=($PYENV_ROOT/bin $path)
-    _cached_source pyenv pyenv init - zsh
-    [[ -d $PYENV_ROOT/plugins/pyenv-virtualenv ]] && _cached_source pyenv-virtualenv pyenv virtualenv-init -
+    if [[ -d /data/data/com.termux ]]; then
+        # Termux forks are slow: rehash costs ~0.8s per start and the virtualenv hook
+        # ~1s per prompt after cd. pyenv still rehashes after `pyenv install`/`pip install`;
+        # `pyenv activate <venv>` works, only auto-activation on cd is lost.
+        _cached_source pyenv-norehash pyenv init - --no-rehash zsh
+    else
+        _cached_source pyenv pyenv init - zsh
+        [[ -d $PYENV_ROOT/plugins/pyenv-virtualenv ]] && _cached_source pyenv-virtualenv pyenv virtualenv-init -
+    fi
 fi
 
 [[ -d ~/.local/share/fnm ]] && path=(~/.local/share/fnm $path)
